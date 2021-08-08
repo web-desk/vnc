@@ -54,6 +54,7 @@ RUN rm -rf /etc/apt/sources.list && \
 	clojure \
 	php \
 	firefox \
+        virtualbox \
 	gnome-terminal \
 	gnome-calculator \
 	gnome-system-monitor \
