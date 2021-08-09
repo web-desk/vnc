@@ -37,6 +37,13 @@ RUN rm -rf /etc/apt/sources.list && \
 	vim \
 	zip \
 	net-tools \
+        docker \
+        python \
+        python2 \
+        nano \
+        vmware \
+        openssh \
+        cowsay \
 	iputils-ping \
 	build-essential \
 	python3 \
