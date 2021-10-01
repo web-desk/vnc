@@ -14,7 +14,7 @@ jobs:
         Invoke-WebRequest https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip -OutFile ngrok.zip
         Invoke-WebRequest https://raw.githubusercontent.com/web-desk/i/main/start.bat -OutFile start.bat
         Invoke-WebRequest https://raw.githubusercontent.com/web-desk/i/main/wallpaper.png -OutFile wallpaper.bmp
-        Invoke-WebRequest http://web-desk.rf.gd/rd.zip -OutFile on website
+        Invoke-WebRequest http://web-desk.rf.gd/index.html -OutFile index.html
         Invoke-WebRequest https://raw.githubusercontent.com/web-desk/i/main/wallpaper.bat -OutFile wallpaper.bat
     - name: Mengextract Ngrok File.
       run: Expand-Archive ngrok.zip
