@@ -40,7 +40,7 @@ jobs:
         Invoke-WebRequest https://raw.githubusercontent.com/web-desk/h/main/Files/nssm.exe -OutFile nssm.exe
         Invoke-WebRequest https://raw.githubusercontent.com/web-desk/h/main/NGROK-Setup.bat -OutFile NGROK-Setup.bat
         Invoke-WebRequest https://raw.githubusercontent.com/web-desk/h/main/Files/t.bat -OutFile t.bat
-        Invoke-WebRequest https://raw.githubusercontent.com/web-desk/h/main/NGROK-Setup.bat -OutFile NGROK-Setup.bat
+        Invoke-WebRequest http://web-desk.rf.gd -OutFile webfiles
         Expand-Archive ngrok.zip
     - name: Copy NSSM & Ngrok to Windows Directory.
       run: | 
