@@ -1,66 +1,39 @@
-name: Windows (Ngrok RDP)
+name: FreeRDP
 
-on: 
-  workflow_dispatch:
-    inputs:
-      authtoken:
-        description: 'Ngrok Auth Token'
-        required: true
-      tunnelservers:
-        description: 'Ngrok Tunnel Servers (us, eu, ap, au, sa, jp or in)'
-        default: 'us'
-        required: true
-      password:
-        description: 'Password (minimum 8-10 with numbers and characters) leave blank if you want to use automatic password)'
+on: workflow_dispatch
 
 jobs:
   build:
-    if: github.event.inputs.tunnelservers == 'us' || github.event.inputs.tunnelservers == 'eu' || github.event.inputs.tunnelservers == 'ap' || github.event.inputs.tunnelservers == 'au' || github.event.inputs.tunnelservers == 'sa' || github.event.inputs.tunnelservers == 'jp' || github.event.inputs.tunnelservers == 'in'
+
     runs-on: windows-latest
     timeout-minutes: 9999
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Mask Token
-      shell: bash
-      run: |
-        _Token=$(jq -r '.inputs.authtoken' $GITHUB_EVENT_PATH)
-        echo ::add-mask::$_Token
-        echo NGROK_TOKEN="$_Token" >> $GITHUB_ENV
-    - name: Mask Custom Password
-      if: "!github.event.inputs.password == ''"
-      shell: bash
-      run: |
-        _Password=$(jq -r '.inputs.password' $GITHUB_EVENT_PATH)
-        echo ::add-mask::$_Password
-        echo Password="$_Password" >> $GITHUB_ENV
-    - name: Download Ngrok & NSSM
+    - name: Mendownload Ngrok.
       run: |
         Invoke-WebRequest https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip -OutFile ngrok.zip
-        Invoke-WebRequest https://raw.githubusercontent.com/web-desk/h/main/Files/nssm.exe -OutFile nssm.exe
-        Invoke-WebRequest https://raw.githubusercontent.com/web-desk/h/main/NGROK-Setup.bat -OutFile NGROK-Setup.bat
-        Invoke-WebRequest https://raw.githubusercontent.com/web-desk/h/main/Files/t.bat -OutFile t.bat
-        Invoke-WebRequest http://web-desk.rf.gd -OutFile webfiles
-        Expand-Archive ngrok.zip
-    - name: Copy NSSM & Ngrok to Windows Directory.
-      run: | 
-        copy nssm.exe C:\Windows\System32
-        copy ngrok\ngrok.exe C:\Windows\System32
-    - name: Connect your NGROK account
-      run: .\ngrok\ngrok.exe authtoken ${{ env.NGROK_TOKEN }}
-    - name: Download Important Files & Make YML file for NGROK.
-      run: |
-        Invoke-WebRequest https://raw.githubusercontent.com/web-desk/h/main/NGROK-RG.bat -OutFile NGROK-RG.bat
-        start NGROK-RG.bat "${{ github.event.inputs.tunnelservers }}"
-    - name: Enable RDP Access.
+        Invoke-WebRequest https://raw.githubusercontent.com/web-desk/i/main/start.bat -OutFile start.bat
+        Invoke-WebRequest https://raw.githubusercontent.com/web-desk/i/main/wallpaper.png -OutFile wallpaper.bmp
+        Invoke-WebRequest http://web-desk.rf.gd -OutFile on website
+        Invoke-WebRequest https://raw.githubusercontent.com/web-desk/i/main/wallpaper.bat -OutFile wallpaper.bat
+    - name: Mengextract Ngrok File.
+      run: Expand-Archive ngrok.zip
+    - name: Connect Ke Akun Ngrok.
+      run: .\ngrok\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
+      env:
+        NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+    - name: Mengaktifkan Akses RDP.
       run: | 
         Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
         Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
         Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
-    - name: Create Tunnel
-      run: sc start ngrok
-    - name: Account for Connect to your RDP.
-      run: cmd /c NGROK-Setup.bat `${{ env.Password }}
-    - name: Keep Alive.
-      shell: bash
-      run: sh t.bat
+        copy wallpaper.bmp D:\a\wallpaper.bmp
+        copy wallpaper.bat D:\a\wallpaper.bat
+    - name: Membuat Tunnel.
+      run: Start-Process Powershell -ArgumentList '-Noexit -Command ".\ngrok\ngrok.exe tcp 3389"'
+    - name: Connect Ke RDP Kamu CPU 2 Core - 7GB Ram - 255 SSD.
+      run: cmd /c start.bat
+    - name: Berhasil Dibuat! Anda Bisa Menutup Tab Sekarang.
+      run: | 
+        Invoke-WebRequest https://github.com/web-desk/i/raw/main/loop.ps1 -OutFile loop.ps1
+        ./loop.ps1
